@@ -1,0 +1,9 @@
+llama-hub
+streamlit
+wikipedia
+openai
+llama-index
+nltk
+httpx
+pypdf
+streamlit-pills
