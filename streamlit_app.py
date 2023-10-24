@@ -20,7 +20,7 @@ from llama_index import (
 st.set_page_config(page_title="Chat with Snowflake's Wikipedia page, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙")
 st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RetrieverRouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the content's of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
-openai.api_key = st.secrets.OPENAI_API_KEY
+openai.api_key = st.secrets.openai_key
 
 @st.cache_data
 def load_data():
