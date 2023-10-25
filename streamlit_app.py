@@ -39,6 +39,9 @@ def on_log(record):
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+for handler in logging.root.handlers:
+    handler.addFilter(logging.Filter('on_log'))
+    # handler.addFilter(logging.Filter('foo'))
 logging.root.addFilter(logging.Filter('on_log'))
 # logging.getLogger().addFilter(on_log)
 
