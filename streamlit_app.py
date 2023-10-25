@@ -37,8 +37,8 @@ def on_log(record):
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-logging.getLogger().addFilter(on_log)
-logging.root.addFilter(on_log)
+# logging.getLogger().addFilter(on_log)
+# logging.root.addFilter(on_log)
 logging.setLogRecordFactory(record_factory)
 
 @st.cache_resource
