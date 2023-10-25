@@ -31,18 +31,26 @@ openai.api_key = st.secrets.openai_key
 #         record = old_factory(*args, **kwargs)
 #         return record
 
-def on_log(record):
-    # st.write(record.levelname, ":", record.getMessage())
-    st.write(record.getMessage())
-    st.write("****")
-    return True
+# def on_log(record):
+#     # st.write(record.levelname, ":", record.getMessage())
+#     st.write(record.getMessage())
+#     st.write("****")
+#     return True
+
+class MyFilter(logging.Filter):
+    def on_log(self, record):
+        st.write(record.getMessage())
+        return True
+
+filter = MyFilter()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 for handler in logging.root.handlers:
-    handler.addFilter(logging.Filter('on_log'))
+    handler.addFilter(logging.Filter(filter))
+    # handler.addFilter(logging.Filter('on_log'))
     # handler.addFilter(logging.Filter('foo'))
-logging.root.addFilter(logging.Filter('on_log'))
+# logging.root.addFilter(logging.Filter('on_log'))
 # logging.getLogger().addFilter(on_log)
 
 # logging.root.addFilter(on_log)
