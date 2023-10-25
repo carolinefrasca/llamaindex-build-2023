@@ -22,13 +22,14 @@ st.title("Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙")
 st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RetrieverRouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the contents of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
 openai.api_key = st.secrets.openai_key
 
-old_factory = logging.getLogRecordFactory()
+# old_factory = logging.getLogRecordFactory()
 
-def record_factory(*args, **kwargs):
-        # st.write(**kwargs)
-        st.write(*args, **kwargs)
-        record = old_factory(*args, **kwargs)
-        return record
+# def record_factory(*args, **kwargs):
+#         # st.write(**kwargs)
+#         # st.write(*args, **kwargs)
+#         st.write(**args)
+#         record = old_factory(*args, **kwargs)
+#         return record
 
 def on_log(record):
     st.write(record.levelname, ":", record.getMessage())
@@ -37,9 +38,11 @@ def on_log(record):
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+logging.root.addFilter(logging.Filter('on_log'))
 # logging.getLogger().addFilter(on_log)
+
 # logging.root.addFilter(on_log)
-logging.setLogRecordFactory(record_factory)
+# logging.setLogRecordFactory(record_factory)
 
 @st.cache_resource
 def load_index_data():
