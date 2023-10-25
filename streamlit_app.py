@@ -28,7 +28,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 old_factory = logging.getLogRecordFactory()
 
 def record_factory(*args, **kwargs):
-        st.write(**kwargs)
+        st.write(**args)
         # st.write(*args, **kwargs)
         # global COUNT
         record = old_factory(*args, **kwargs)
