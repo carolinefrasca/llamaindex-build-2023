@@ -24,6 +24,7 @@ openai.api_key = st.secrets.openai_key
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+st.write(sys.stdout)
 
 @st.cache_resource
 def load_index_data():
