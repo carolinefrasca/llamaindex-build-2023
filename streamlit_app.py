@@ -22,13 +22,10 @@ st.title("Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙")
 st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RetrieverRouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the contents of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
 openai.api_key = st.secrets.openai_key
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-
 old_factory = logging.getLogRecordFactory()
 
 def record_factory(*args, **kwargs):
-        st.write(**args)
+        st.write(**kwargs[0])
         # st.write(*args, **kwargs)
         # global COUNT
         record = old_factory(*args, **kwargs)
@@ -36,6 +33,8 @@ def record_factory(*args, **kwargs):
         # COUNT += 1
         return record
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 logging.setLogRecordFactory(record_factory)
 
 @st.cache_resource
