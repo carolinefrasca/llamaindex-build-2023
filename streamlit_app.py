@@ -46,8 +46,9 @@ filter = MyFilter()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+
 for handler in logging.root.handlers:
-    handler.addFilter(logging.Filter(filter))
+    handler.addFilter(filter)
     # handler.addFilter(logging.Filter('on_log'))
     # handler.addFilter(logging.Filter('foo'))
 # logging.root.addFilter(logging.Filter('on_log'))
