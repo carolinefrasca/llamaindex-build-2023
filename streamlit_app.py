@@ -32,7 +32,8 @@ openai.api_key = st.secrets.openai_key
 #         return record
 
 def on_log(record):
-    st.write(record.levelname, ":", record.getMessage())
+    # st.write(record.levelname, ":", record.getMessage())
+    st.write(record.getMessage())
     st.write("****")
     return True
 
