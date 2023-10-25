@@ -26,15 +26,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 @st.cache_data
-def load_data():
+def load_index_data():
     WikipediaReader = download_loader("WikipediaReader",custom_path="local_dir")
     loader = WikipediaReader()
     documents = loader.load_data(pages=['Snowflake Inc.'])
-    return documents
 
-@st.cache_data
-def index_data(documents):
-    # initialize service context (set chunk size)
+     # initialize service context (set chunk size)
     service_context = ServiceContext.from_defaults(chunk_size=1024)
     nodes = service_context.node_parser.get_nodes_from_documents(documents)
 
@@ -71,8 +68,47 @@ def index_data(documents):
     )
     return obj_index
 
-documents = load_data()
-obj_index = index_data(documents)
+# @st.cache_data
+# def index_data(documents):
+#     # initialize service context (set chunk size)
+#     service_context = ServiceContext.from_defaults(chunk_size=1024)
+#     nodes = service_context.node_parser.get_nodes_from_documents(documents)
+
+#     # initialize storage context (by default it's in-memory)
+#     storage_context = StorageContext.from_defaults()
+#     storage_context.docstore.add_documents(nodes)
+
+#     summary_index = SummaryIndex(nodes, storage_context=storage_context)
+#     vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
+
+#     list_query_engine = summary_index.as_query_engine(
+#         response_mode="tree_summarize", use_async=True
+#     )
+#     vector_query_engine = vector_index.as_query_engine(
+#         response_mode="tree_summarize", use_async=True
+#     )
+
+#     list_tool = QueryEngineTool.from_defaults(
+#         query_engine=list_query_engine,
+#         description="Useful for questions summarizing Snowflake's Wikipedia page",
+#     )
+#     vector_tool = QueryEngineTool.from_defaults(
+#         query_engine=vector_query_engine,
+#         description=(
+#             "Useful for retrieving specific information about Snowflake"
+#         ),
+#     )
+
+#     tool_mapping = SimpleToolNodeMapping.from_objects([list_tool, vector_tool])
+#     obj_index = ObjectIndex.from_objects(
+#         [list_tool, vector_tool],
+#         tool_mapping,
+#         VectorStoreIndex,
+#     )
+#     return obj_index
+
+# documents = load_data()
+obj_index = load_index_data()
 
 selected = pills("Choose a question to get started or write your own below.", ["What is Snowflake?", "What company did Snowflake announce they would acquire in October 2023?", "What company did Snowflake acquire in March 2022?", "When did Snowflake IPO?"], clearable=True, index=None)
 
