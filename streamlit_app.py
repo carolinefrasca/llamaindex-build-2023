@@ -25,7 +25,7 @@ openai.api_key = st.secrets.openai_key
 old_factory = logging.getLogRecordFactory()
 
 def record_factory(*args, **kwargs):
-        st.write(**kwargs[0])
+        st.write(**kwargs)
         # st.write(*args, **kwargs)
         # global COUNT
         record = old_factory(*args, **kwargs)
