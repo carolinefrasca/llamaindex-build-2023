@@ -37,25 +37,23 @@ openai.api_key = st.secrets.openai_key
 #     st.write("****")
 #     return True
 
-class MyFilter(logging.Filter):
-    def on_log(self, record):
-        st.write(record.getMessage())
-        return True
+# class MyFilter(logging.Filter):
+#     def on_log(self, record):
+#         st.write(record.getMessage())
+#         return True
 
-filter = MyFilter()
+# filter = MyFilter()
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-
-for handler in logging.root.handlers:
-    handler.addFilter(filter)
-    # handler.addFilter(logging.Filter('on_log'))
-    # handler.addFilter(logging.Filter('foo'))
-# logging.root.addFilter(logging.Filter('on_log'))
-# logging.getLogger().addFilter(on_log)
-
-# logging.root.addFilter(on_log)
-# logging.setLogRecordFactory(record_factory)
+# for handler in logging.root.handlers:
+#     handler.addFilter(logging.Filter(filter))
+#     # handler.addFilter(logging.Filter('on_log'))
+#     # handler.addFilter(logging.Filter('foo'))
+# # logging.root.addFilter(logging.Filter('on_log'))
+# # logging.getLogger().addFilter(on_log)
+# # logging.root.addFilter(on_log)
+# # logging.setLogRecordFactory(record_factory)
 
 @st.cache_resource
 def load_index_data():
