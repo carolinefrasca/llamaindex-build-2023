@@ -25,6 +25,18 @@ openai.api_key = st.secrets.openai_key
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
+old_factory = logging.getLogRecordFactory()
+
+def record_factory(*args, **kwargs):
+        st.write(*args, **kwargs)
+        # global COUNT
+        record = old_factory(*args, **kwargs)
+        # record.lognum = COUNT
+        # COUNT += 1
+        return record
+
+logging.setLogRecordFactory(record_factory)
+
 @st.cache_resource
 def load_index_data():
     WikipediaReader = download_loader("WikipediaReader",custom_path="local_dir")
