@@ -226,6 +226,11 @@ if selected:
             result = str(response.metadata.get("selector_result"))
             index_of_query_engine_used = result.split("index=",1)[1][0]
             st.write(index_of_query_engine_used)
+
+            reason = result.split("reason=",1)
+            st.write(reason)
+
+            
             
             # st.write(response.metadata.get("selector_result"))
             # st.write(type(response.metadata.get("selector_result")))
