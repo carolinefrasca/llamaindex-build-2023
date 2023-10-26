@@ -108,9 +108,8 @@ if selected:
             query_engine_index = selector_dict["selections"][0]["index"]
             query_engine_used = query_engines[query_engine_index]
             reason = selector_dict["selections"][0]["reason"]
-            explanation = "Used " + query_engine_used + " because " + reason
-            st.info(explanation)
-
+            explanation = "Used " + query_engine_used + "to answer this question because " + reason
+            st.info(explanation,icon="🦙")
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -122,3 +121,9 @@ if st.session_state.messages[-1]["role"] != "assistant":
             response = st.session_state.router_query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
+            selector_dict = response.metadata["selector_result"].dict()
+            query_engine_index = selector_dict["selections"][0]["index"]
+            query_engine_used = query_engines[query_engine_index]
+            reason = selector_dict["selections"][0]["reason"]
+            explanation = "Used " + query_engine_used + "to answer this question because " + reason
+            st.info(explanation,icon="🦙")
