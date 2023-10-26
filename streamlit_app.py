@@ -51,26 +51,28 @@ def load_index_data():
     summary_index = SummaryIndex(nodes, storage_context=storage_context)
     vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
 
-    list_query_engine = summary_index.as_query_engine(
-    response_mode="tree_summarize",
-    use_async=True,
-    )
-    vector_query_engine = vector_index.as_query_engine()
+    return summary_index, vector_index
 
-    list_tool = QueryEngineTool.from_defaults(
-        query_engine=list_query_engine,
-        description=(
-            "Useful for questions summarizing Snowflake's Wikipedia page"
-        ),
-    )
+    # list_query_engine = summary_index.as_query_engine(
+    #     response_mode="tree_summarize",
+    #     use_async=True,
+    # )
+    # vector_query_engine = vector_index.as_query_engine()
 
-    vector_tool = QueryEngineTool.from_defaults(
-        query_engine=vector_query_engine,
-        description=(
-            "Useful for retrieving specific information about Snowflake"
-        ),
-    )
-    return list_tool, vector_tool
+    # list_tool = QueryEngineTool.from_defaults(
+    #     query_engine=list_query_engine,
+    #     description=(
+    #         "Useful for questions summarizing Snowflake's Wikipedia page"
+    #     ),
+    # )
+
+    # vector_tool = QueryEngineTool.from_defaults(
+    #     query_engine=vector_query_engine,
+    #     description=(
+    #         "Useful for retrieving specific information about Snowflake"
+    #     ),
+    # )
+    # return list_tool, vector_tool
 
     # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
     #     st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
@@ -82,7 +84,7 @@ def load_index_data():
     #         vector_tool,
     #     ],
     # )
-    return st.session_state.query_engine
+    # return st.session_state.query_engine
 
      # initialize service context (set chunk size)
     # service_context = ServiceContext.from_defaults(chunk_size=1024)
@@ -163,7 +165,31 @@ def load_index_data():
 # documents = load_data()
 # obj_index = load_index_data()
 # query_engine = load_index_data()
-list_tool, vector_tool = load_index_data()
+# list_tool, vector_tool = load_index_data()
+summary_index, vector_index = load_index_data()
+
+if "list_query_engine" not in st.session_state.keys(): # Initialize the query engine
+    st.session_state.list_query_engine = summary_index.as_query_engine(response_mode="tree_summarize",use_async=True,)
+
+if "vector_query_engine" not in st.session_state.keys():
+    st.session_state.list_query_engine = vector_index.as_query_engine()
+
+list_tool = QueryEngineTool.from_defaults(
+    query_engine=st.session_state.list_query_engine,
+    description=(
+        "Useful for questions summarizing Snowflake's Wikipedia page"
+    ),
+)
+
+vector_tool = QueryEngineTool.from_defaults(
+    query_engine=st.session_state.vector_query_engine,
+    description=(
+        "Useful for retrieving specific information about Snowflake"
+    ),
+)
+
+if "router_query_engine" not in st.session_state.keys(): # Initialize the query engine
+    st.session_state.router_query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
 
 selected = pills("Choose a question to get started or write your own below.", ["What is Snowflake?", "What company did Snowflake announce they would acquire in October 2023?", "What company did Snowflake acquire in March 2022?", "When did Snowflake IPO?"], clearable=True, index=None)
 
@@ -183,15 +209,12 @@ for message in st.session_state.messages: # Display the prior chat messages
 # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
 #         st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
 
-if "query_engine" not in st.session_state.keys(): # Initialize the query engine
-    st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
-
 if selected:
     with st.chat_message("user"):
         st.write(selected)
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = st.session_state.query_engine.query(selected)
+            response = st.session_state.router_query_engine.query(selected)
             st.write(str(response))
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
@@ -204,7 +227,7 @@ if prompt := st.chat_input("Your question"): # Prompt for user input and save to
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = st.session_state.query_engine.query(prompt)
+            response = st.session_state.router_query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
             # st.info()
