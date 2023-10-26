@@ -228,6 +228,7 @@ if selected:
             query_engine_used = query_engine_tools[int(index_of_query_engine_used)]
             reason = result.split("reason='",1)[1]
             query_engine_used = "Used " + query_engine_used + " because " + reason[:-4]
+            st.write(query_engine_used)
             # st.write(type(index_of_query_engine_used))
             # st.write("Used " + query_engine_tools[index_of_query_engine_used])
             # st.write(reason[:-4])
