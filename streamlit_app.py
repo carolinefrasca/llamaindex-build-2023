@@ -225,10 +225,10 @@ if selected:
             # st.write(type(response.metadata))
             result = str(response.metadata.get("selector_result"))
             index_of_query_engine_used = result.split("index=",1)[1][0]
-            st.write(index_of_query_engine_used)
+            st.write("Used " + query_engine_tools[index_of_query_engine_used])
 
-            reason = result.split('reason=',1)
-            st.write(reason)
+            reason = result.split('reason=',1)[1]
+            st.write(reason[:-4])
 
             
             
