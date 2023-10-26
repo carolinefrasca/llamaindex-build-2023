@@ -222,9 +222,11 @@ if selected:
             # st.write(response.metadata["selector_result"].ind)
             # st.write(type(response.metadata["selector_result"]))
             # st.write(type(response.metadata))
-            st.write(response.metadata.get("selector_result"))
-            st.write(type(response.metadata.get("selector_result")))
-            st.write(response.metadata["selector_result"].json)
+            result = response.metadata.get("selector_result")
+            st.write(result.split("index",1))
+            # st.write(response.metadata.get("selector_result"))
+            # st.write(type(response.metadata.get("selector_result")))
+            # st.write(response.metadata["selector_result"].json)
 
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
