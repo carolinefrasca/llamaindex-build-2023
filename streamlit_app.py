@@ -70,9 +70,10 @@ def load_index_data():
             "Useful for retrieving specific information about Snowflake"
         ),
     )
+    return list_tool, vector_tool
 
-    if "query_engine" not in st.session_state.keys(): # Initialize the query engine
-        st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
+    # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
+    #     st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
 
     # query_engine = RouterQueryEngine(
     #     selector=PydanticSingleSelector.from_defaults(),
@@ -161,7 +162,8 @@ def load_index_data():
 
 # documents = load_data()
 # obj_index = load_index_data()
-query_engine = load_index_data()
+# query_engine = load_index_data()
+list_tool, vector_tool = load_index_data()
 
 selected = pills("Choose a question to get started or write your own below.", ["What is Snowflake?", "What company did Snowflake announce they would acquire in October 2023?", "What company did Snowflake acquire in March 2022?", "When did Snowflake IPO?"], clearable=True, index=None)
 
@@ -180,6 +182,9 @@ for message in st.session_state.messages: # Display the prior chat messages
 
 # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
 #         st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
+
+if "query_engine" not in st.session_state.keys(): # Initialize the query engine
+    st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
 
 if selected:
     with st.chat_message("user"):
