@@ -227,7 +227,7 @@ if selected:
             index_of_query_engine_used = result.split("index=",1)[1][0]
             st.write(index_of_query_engine_used)
 
-            reason = result.split("reason=",1)
+            reason = result.split('"reason=',1)[:-4]
             st.write(reason)
 
             
