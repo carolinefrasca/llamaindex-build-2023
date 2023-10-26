@@ -219,7 +219,7 @@ if selected:
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
             # st.write(response.metadata["selector_result"])
-            st.write(response.metadata["selector_result"])
+            st.write(response.metadata["selector_result"]["ind"])
             st.write(type(response.metadata["selector_result"]))
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
@@ -233,6 +233,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.write(str(response))
             add_to_message_history("assistant", response)
             # st.info()
-            st.write(response.metadata["selector_result"])
+            # st.write(response.metadata["selector_result"])
+            st.write(response.metadata["selector_result"]["ind"])
             st.write(type(response.metadata["selector_result"]))
 
