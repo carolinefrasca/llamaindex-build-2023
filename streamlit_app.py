@@ -107,10 +107,10 @@ if selected:
             result = str(response.metadata.get("selector_result"))
             index_of_query_engine_used = result.split("index=",1)[1][0]
             query_engine_used = query_engine_tools[int(index_of_query_engine_used)]
-            st.write(result)
-            # reason = result.split("reason='",1)[1]
-            # query_engine_used = "Used " + query_engine_used + " because " + reason[:-4]
-            # st.write(query_engine_used)
+            # st.write(result)
+            reason = result.split("reason='",1)[1]
+            query_engine_used = "Used " + query_engine_used + " because " + reason[:-4]
+            st.write(query_engine_used)
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
