@@ -93,7 +93,7 @@ for message in st.session_state.messages: # Display the prior chat messages
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-query_engine_tools=["list query engine","vector query engine",]
+query_engines=["list query engine","vector query engine",]
 
 if selected:
     with st.chat_message("user"):
@@ -104,11 +104,14 @@ if selected:
             st.write(str(response))
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
-            st.write(response.metadata["selector_result"])
-            st.write(type(response.metadata["selector_result"]))
-            st.write(response.metadata.fromkeys("selector_result"))
-            st.write(type(response.metadata["selector_result"]))
+            # st.write(response.metadata["selector_result"])
+            # st.write(type(response.metadata["selector_result"]))
+            # st.write(response.metadata.fromkeys("selector_result"))
+            # st.write(type(response.metadata["selector_result"]))
             st.write(response.metadata["selector_result"].dict())
+            selector_dict = response.metadata["selector_result"].dict()
+            query_engine_used = query_engines[selector_dict[0]]
+            reason = selector_dict[1]
 
 
             # result = str(response.metadata.get("selector_result"))
