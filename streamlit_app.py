@@ -190,7 +190,7 @@ if selected:
             st.write(str(response))
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
-            st.write(response.metadata["selector_result"])
+            st.write(response.metadata["selector_result"].index)
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -202,4 +202,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             response = st.session_state.query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
-            st.write(response.metadata["selector_result"])
+            st.info()
+            st.write(response.metadata["selector_result"].index)
