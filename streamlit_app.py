@@ -125,5 +125,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             query_engine_index = selector_dict["selections"][0]["index"]
             query_engine_used = query_engines[query_engine_index]
             reason = selector_dict["selections"][0]["reason"]
-            explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason.lower()
+            explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason[0:1].lower() + reason[2:]
             st.success(explanation,icon="✅")
