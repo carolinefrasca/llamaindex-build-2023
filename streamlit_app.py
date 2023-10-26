@@ -28,7 +28,7 @@ from llama_index.selectors.pydantic_selectors import (
 
 st.set_page_config(page_title="Chat with Snowflake's Wikipedia page, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙")
-st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RetrieverRouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the contents of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
+st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the contents of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
 openai.api_key = st.secrets.openai_key
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -219,7 +219,7 @@ if selected:
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
             # st.write(response.metadata["selector_result"])
-            st.write(response.metadata["selector_result"]["ind"])
+            st.write(response.metadata["selector_result"].ind)
             st.write(type(response.metadata["selector_result"]))
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
@@ -234,6 +234,6 @@ if st.session_state.messages[-1]["role"] != "assistant":
             add_to_message_history("assistant", response)
             # st.info()
             # st.write(response.metadata["selector_result"])
-            st.write(response.metadata["selector_result"]["ind"])
+            st.write(response.metadata["selector_result"].ind)
             st.write(type(response.metadata["selector_result"]))
 
