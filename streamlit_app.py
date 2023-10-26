@@ -224,7 +224,7 @@ if selected:
             # st.write(type(response.metadata["selector_result"]))
             # st.write(type(response.metadata))
             result = str(response.metadata.get("selector_result"))
-            index_of_query_engine_used = result.split("index=",1)[1][0]
+            index_of_query_engine_used = result.split("index=",1)[1]
             st.write(query_engine_tools[int(index_of_query_engine_used)])
             # st.write(type(index_of_query_engine_used))
             # st.write("Used " + query_engine_tools[index_of_query_engine_used])
