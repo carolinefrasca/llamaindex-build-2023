@@ -99,8 +99,7 @@ if selected:
     with st.chat_message("user"):
         st.write(selected)
     with st.chat_message("assistant"):
-        # with st.spinner("Thinking..."):
-        with st.status("Thinking...", expanded=True) as status:
+        with st.spinner("Thinking..."):
             response = st.session_state.router_query_engine.query(selected)
             st.write(str(response))
             add_to_message_history("user",selected)
@@ -113,8 +112,7 @@ if selected:
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason
             else:
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason[0:1].lower() + reason[1:]
-            status.update(label=explanation, state="complete", expanded=True)
-            # st.success(explanation,icon="✅")
+            st.success(explanation,icon="✅")
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -122,8 +120,7 @@ if prompt := st.chat_input("Your question"): # Prompt for user input and save to
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        with st.status("Thinking...", expanded=True) as status:
-        # with st.spinner("Thinking..."):
+        with st.spinner("Thinking..."):
             response = st.session_state.router_query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
@@ -135,6 +132,4 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason
             else:
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason[0:1].lower() + reason[1:]
-            status.update(label=explanation, state="complete", expanded=True)
-
-            # st.success(explanation,icon="✅")
+            st.success(explanation,icon="✅")
