@@ -208,6 +208,7 @@ for message in st.session_state.messages: # Display the prior chat messages
 
 # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
 #         st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
+query_engine_tools=["list query engine","vector query engine",]
 
 if selected:
     with st.chat_message("user"):
@@ -223,7 +224,9 @@ if selected:
             # st.write(type(response.metadata["selector_result"]))
             # st.write(type(response.metadata))
             result = str(response.metadata.get("selector_result"))
-            index_of_query_engine_used = st.write(result.split("index=",1))[1][0]
+            index_of_query_engine_used = result.split("index=",1)[1][0]
+            st.write(index_of_query_engine_used)
+            
             # st.write(response.metadata.get("selector_result"))
             # st.write(type(response.metadata.get("selector_result")))
             # st.write(response.metadata["selector_result"].json)
