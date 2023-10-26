@@ -53,119 +53,6 @@ def load_index_data():
 
     return summary_index, vector_index
 
-    # list_query_engine = summary_index.as_query_engine(
-    #     response_mode="tree_summarize",
-    #     use_async=True,
-    # )
-    # vector_query_engine = vector_index.as_query_engine()
-
-    # list_tool = QueryEngineTool.from_defaults(
-    #     query_engine=list_query_engine,
-    #     description=(
-    #         "Useful for questions summarizing Snowflake's Wikipedia page"
-    #     ),
-    # )
-
-    # vector_tool = QueryEngineTool.from_defaults(
-    #     query_engine=vector_query_engine,
-    #     description=(
-    #         "Useful for retrieving specific information about Snowflake"
-    #     ),
-    # )
-    # return list_tool, vector_tool
-
-    # if "query_engine" not in st.session_state.keys(): # Initialize the query engine
-    #     st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
-
-    # query_engine = RouterQueryEngine(
-    #     selector=PydanticSingleSelector.from_defaults(),
-    #     query_engine_tools=[
-    #         list_tool,
-    #         vector_tool,
-    #     ],
-    # )
-    # return st.session_state.query_engine
-
-     # initialize service context (set chunk size)
-    # service_context = ServiceContext.from_defaults(chunk_size=1024)
-    # nodes = service_context.node_parser.get_nodes_from_documents(documents)
-
-    # # initialize storage context (by default it's in-memory)
-    # storage_context = StorageContext.from_defaults()
-    # storage_context.docstore.add_documents(nodes)
-
-    # summary_index = SummaryIndex(nodes, storage_context=storage_context)
-    # vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
-
-    # list_query_engine = summary_index.as_query_engine(
-    #     response_mode="tree_summarize", use_async=True
-    # )
-    # vector_query_engine = vector_index.as_query_engine(
-    #     response_mode="tree_summarize", use_async=True
-    # )
-
-    # list_tool = QueryEngineTool.from_defaults(
-    #     query_engine=list_query_engine,
-    #     description="Useful for questions summarizing Snowflake's Wikipedia page",
-    # )
-    # vector_tool = QueryEngineTool.from_defaults(
-    #     query_engine=vector_query_engine,
-    #     description=(
-    #         "Useful for retrieving specific information about Snowflake"
-    #     ),
-    # )
-
-    # tool_mapping = SimpleToolNodeMapping.from_objects([list_tool, vector_tool])
-    # obj_index = ObjectIndex.from_objects(
-    #     [list_tool, vector_tool],
-    #     tool_mapping,
-    #     VectorStoreIndex,
-    # )
-    # return obj_index
-
-# @st.cache_data
-# def index_data(documents):
-#     # initialize service context (set chunk size)
-#     service_context = ServiceContext.from_defaults(chunk_size=1024)
-#     nodes = service_context.node_parser.get_nodes_from_documents(documents)
-
-#     # initialize storage context (by default it's in-memory)
-#     storage_context = StorageContext.from_defaults()
-#     storage_context.docstore.add_documents(nodes)
-
-#     summary_index = SummaryIndex(nodes, storage_context=storage_context)
-#     vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
-
-#     list_query_engine = summary_index.as_query_engine(
-#         response_mode="tree_summarize", use_async=True
-#     )
-#     vector_query_engine = vector_index.as_query_engine(
-#         response_mode="tree_summarize", use_async=True
-#     )
-
-#     list_tool = QueryEngineTool.from_defaults(
-#         query_engine=list_query_engine,
-#         description="Useful for questions summarizing Snowflake's Wikipedia page",
-#     )
-#     vector_tool = QueryEngineTool.from_defaults(
-#         query_engine=vector_query_engine,
-#         description=(
-#             "Useful for retrieving specific information about Snowflake"
-#         ),
-#     )
-
-#     tool_mapping = SimpleToolNodeMapping.from_objects([list_tool, vector_tool])
-#     obj_index = ObjectIndex.from_objects(
-#         [list_tool, vector_tool],
-#         tool_mapping,
-#         VectorStoreIndex,
-#     )
-#     return obj_index
-
-# documents = load_data()
-# obj_index = load_index_data()
-# query_engine = load_index_data()
-# list_tool, vector_tool = load_index_data()
 summary_index, vector_index = load_index_data()
 
 if "list_query_engine" not in st.session_state.keys(): # Initialize the query engine
@@ -206,8 +93,6 @@ for message in st.session_state.messages: # Display the prior chat messages
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# if "query_engine" not in st.session_state.keys(): # Initialize the query engine
-#         st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
 query_engine_tools=["list query engine","vector query engine",]
 
 if selected:
@@ -219,23 +104,13 @@ if selected:
             st.write(str(response))
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
-            # st.write(response.metadata["selector_result"])
-            # st.write(response.metadata["selector_result"].ind)
-            # st.write(type(response.metadata["selector_result"]))
-            # st.write(type(response.metadata))
             result = str(response.metadata.get("selector_result"))
             index_of_query_engine_used = result.split("index=",1)[1][0]
             query_engine_used = query_engine_tools[int(index_of_query_engine_used)]
-            reason = result.split("reason='",1)[1]
-            query_engine_used = "Used " + query_engine_used + " because " + reason[:-4]
-            st.write(query_engine_used)
-            # st.write(type(index_of_query_engine_used))
-            # st.write("Used " + query_engine_tools[index_of_query_engine_used])
-            # st.write(reason[:-4])
-            # st.write(response.metadata.get("selector_result"))
-            # st.write(type(response.metadata.get("selector_result")))
-            # st.write(response.metadata["selector_result"].json)
-
+            st.write(result)
+            # reason = result.split("reason='",1)[1]
+            # query_engine_used = "Used " + query_engine_used + " because " + reason[:-4]
+            # st.write(query_engine_used)
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -247,8 +122,3 @@ if st.session_state.messages[-1]["role"] != "assistant":
             response = st.session_state.router_query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
-            # st.info()
-            # st.write(response.metadata["selector_result"])
-            # st.write(response.metadata["selector_result"].ind)
-            # st.write(type(response.metadata["selector_result"]))
-
