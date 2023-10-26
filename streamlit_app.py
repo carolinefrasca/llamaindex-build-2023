@@ -8,7 +8,7 @@ import llama_hub
 from streamlit_pills import pills
 from llama_index.tools.query_engine import QueryEngineTool
 from llama_index.objects import ObjectIndex, SimpleToolNodeMapping
-from llama_index.query_engine import ToolRetrieverRouterQueryEngine
+# from llama_index.query_engine import ToolRetrieverRouterQueryEngine
 from llama_index import (
     VectorStoreIndex,
     SummaryIndex,
@@ -16,44 +16,23 @@ from llama_index import (
     StorageContext,
     download_loader
 )
+from llama_index.query_engine.router_query_engine import RouterQueryEngine
+from llama_index.selectors.llm_selectors import (
+    LLMSingleSelector,
+    LLMMultiSelector,
+)
+from llama_index.selectors.pydantic_selectors import (
+    PydanticMultiSelector,
+    PydanticSingleSelector,
+)
 
 st.set_page_config(page_title="Chat with Snowflake's Wikipedia page, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.title("Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙")
 st.info("Because this chatbot is powered by **LlamaIndex's [router query engine](https://gpt-index.readthedocs.io/en/latest/examples/query_engine/RetrieverRouterQueryEngine.html)**, it can answer both **summarization questions** and **context-specific questions** based on the contents of [Snowflake's Wikipedia page](https://en.wikipedia.org/wiki/Snowflake_Inc.).", icon="ℹ️")
 openai.api_key = st.secrets.openai_key
 
-# old_factory = logging.getLogRecordFactory()
-
-# def record_factory(*args, **kwargs):
-#         # st.write(**kwargs)
-#         # st.write(*args, **kwargs)
-#         st.write(**args)
-#         record = old_factory(*args, **kwargs)
-#         return record
-
-# def on_log(record):
-#     # st.write(record.levelname, ":", record.getMessage())
-#     st.write(record.getMessage())
-#     st.write("****")
-#     return True
-
-# class MyFilter(logging.Filter):
-#     def on_log(self, record):
-#         st.write(record.getMessage())
-#         return True
-
-# filter = MyFilter()
-
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-# for handler in logging.root.handlers:
-#     handler.addFilter(logging.Filter(filter))
-#     # handler.addFilter(logging.Filter('on_log'))
-#     # handler.addFilter(logging.Filter('foo'))
-# # logging.root.addFilter(logging.Filter('on_log'))
-# # logging.getLogger().addFilter(on_log)
-# # logging.root.addFilter(on_log)
-# # logging.setLogRecordFactory(record_factory)
 
 @st.cache_resource
 def load_index_data():
@@ -61,7 +40,7 @@ def load_index_data():
     loader = WikipediaReader()
     documents = loader.load_data(pages=['Snowflake Inc.'])
 
-     # initialize service context (set chunk size)
+    # initialize service context (set chunk size)
     service_context = ServiceContext.from_defaults(chunk_size=1024)
     nodes = service_context.node_parser.get_nodes_from_documents(documents)
 
@@ -73,16 +52,18 @@ def load_index_data():
     vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
 
     list_query_engine = summary_index.as_query_engine(
-        response_mode="tree_summarize", use_async=True
+    response_mode="tree_summarize",
+    use_async=True,
     )
-    vector_query_engine = vector_index.as_query_engine(
-        response_mode="tree_summarize", use_async=True
-    )
+    vector_query_engine = vector_index.as_query_engine()
 
     list_tool = QueryEngineTool.from_defaults(
         query_engine=list_query_engine,
-        description="Useful for questions summarizing Snowflake's Wikipedia page",
+        description=(
+            "Useful for questions summarizing Snowflake's Wikipedia page"
+        ),
     )
+
     vector_tool = QueryEngineTool.from_defaults(
         query_engine=vector_query_engine,
         description=(
@@ -90,13 +71,54 @@ def load_index_data():
         ),
     )
 
-    tool_mapping = SimpleToolNodeMapping.from_objects([list_tool, vector_tool])
-    obj_index = ObjectIndex.from_objects(
-        [list_tool, vector_tool],
-        tool_mapping,
-        VectorStoreIndex,
-    )
-    return obj_index
+    if "query_engine" not in st.session_state.keys(): # Initialize the query engine
+        st.session_state.query_engine = RouterQueryEngine(selector=PydanticSingleSelector.from_defaults(), query_engine_tools=[list_tool,vector_tool,],)
+
+    # query_engine = RouterQueryEngine(
+    #     selector=PydanticSingleSelector.from_defaults(),
+    #     query_engine_tools=[
+    #         list_tool,
+    #         vector_tool,
+    #     ],
+    # )
+    return st.session_state.query_engine
+
+     # initialize service context (set chunk size)
+    # service_context = ServiceContext.from_defaults(chunk_size=1024)
+    # nodes = service_context.node_parser.get_nodes_from_documents(documents)
+
+    # # initialize storage context (by default it's in-memory)
+    # storage_context = StorageContext.from_defaults()
+    # storage_context.docstore.add_documents(nodes)
+
+    # summary_index = SummaryIndex(nodes, storage_context=storage_context)
+    # vector_index = VectorStoreIndex(nodes, storage_context=storage_context)
+
+    # list_query_engine = summary_index.as_query_engine(
+    #     response_mode="tree_summarize", use_async=True
+    # )
+    # vector_query_engine = vector_index.as_query_engine(
+    #     response_mode="tree_summarize", use_async=True
+    # )
+
+    # list_tool = QueryEngineTool.from_defaults(
+    #     query_engine=list_query_engine,
+    #     description="Useful for questions summarizing Snowflake's Wikipedia page",
+    # )
+    # vector_tool = QueryEngineTool.from_defaults(
+    #     query_engine=vector_query_engine,
+    #     description=(
+    #         "Useful for retrieving specific information about Snowflake"
+    #     ),
+    # )
+
+    # tool_mapping = SimpleToolNodeMapping.from_objects([list_tool, vector_tool])
+    # obj_index = ObjectIndex.from_objects(
+    #     [list_tool, vector_tool],
+    #     tool_mapping,
+    #     VectorStoreIndex,
+    # )
+    # return obj_index
 
 # @st.cache_data
 # def index_data(documents):
@@ -138,7 +160,8 @@ def load_index_data():
 #     return obj_index
 
 # documents = load_data()
-obj_index = load_index_data()
+# obj_index = load_index_data()
+query_engine = load_index_data()
 
 selected = pills("Choose a question to get started or write your own below.", ["What is Snowflake?", "What company did Snowflake announce they would acquire in October 2023?", "What company did Snowflake acquire in March 2022?", "When did Snowflake IPO?"], clearable=True, index=None)
 
@@ -155,8 +178,8 @@ for message in st.session_state.messages: # Display the prior chat messages
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-if "query_engine" not in st.session_state.keys(): # Initialize the query engine
-        st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
+# if "query_engine" not in st.session_state.keys(): # Initialize the query engine
+#         st.session_state.query_engine = ToolRetrieverRouterQueryEngine(obj_index.as_retriever())
 
 if selected:
     with st.chat_message("user"):
