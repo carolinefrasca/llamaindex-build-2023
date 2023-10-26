@@ -222,7 +222,7 @@ if selected:
             # st.write(response.metadata["selector_result"].ind)
             st.write(type(response.metadata["selector_result"]))
             st.write(type(response.metadata))
-
+            st.write(type(response.metadata.get("selector_result")))
 
 if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
