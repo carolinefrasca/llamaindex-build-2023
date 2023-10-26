@@ -113,6 +113,7 @@ if selected:
             query_engine_index = selector_dict["selections"][0]["index"]
             query_engine_used = query_engines[query_engine_index]
             reason = selector_dict["selections"][0]["reason"]
+            st.write("Used " + query_engine_used + " because " + reason)
 
 
             # result = str(response.metadata.get("selector_result"))
