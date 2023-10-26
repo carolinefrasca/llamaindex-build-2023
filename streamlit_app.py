@@ -172,7 +172,7 @@ if "list_query_engine" not in st.session_state.keys(): # Initialize the query en
     st.session_state.list_query_engine = summary_index.as_query_engine(response_mode="tree_summarize",use_async=True,)
 
 if "vector_query_engine" not in st.session_state.keys():
-    st.session_state.list_query_engine = vector_index.as_query_engine()
+    st.session_state.vector_query_engine = vector_index.as_query_engine()
 
 list_tool = QueryEngineTool.from_defaults(
     query_engine=st.session_state.list_query_engine,
