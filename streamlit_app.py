@@ -222,7 +222,7 @@ if selected:
             # st.write(response.metadata["selector_result"].ind)
             # st.write(type(response.metadata["selector_result"]))
             # st.write(type(response.metadata))
-            result = response.metadata.get("selector_result")
+            result = str(response.metadata.get("selector_result"))
             st.write(result.split("index",1))
             # st.write(response.metadata.get("selector_result"))
             # st.write(type(response.metadata.get("selector_result")))
