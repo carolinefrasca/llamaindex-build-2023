@@ -110,9 +110,9 @@ if selected:
             # st.write(type(response.metadata["selector_result"]))
             st.write(response.metadata["selector_result"].dict())
             selector_dict = response.metadata["selector_result"].dict()
-            query_engine_index = selector_dict[0]
+            query_engine_index = selector_dict[0]["index"]
             query_engine_used = query_engines[query_engine_index]
-            reason = selector_dict[1]
+            reason = selector_dic[0]["reason"]
 
 
             # result = str(response.metadata.get("selector_result"))
