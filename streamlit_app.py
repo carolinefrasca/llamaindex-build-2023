@@ -104,7 +104,7 @@ if selected:
             st.write(str(response))
             add_to_message_history("user",selected)
             add_to_message_history("assistant",response)
-            st.write(response.metadata.selector_result)
+            st.write(response.metadata["selector_result"])
             # result = str(response.metadata.get("selector_result"))
             # index_of_query_engine_used = result.split("index=",1)[1][0]
             # query_engine_used = query_engine_tools[int(index_of_query_engine_used)]
