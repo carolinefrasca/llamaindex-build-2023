@@ -207,5 +207,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             response = st.session_state.query_engine.query(prompt)
             st.write(str(response))
             add_to_message_history("assistant", response)
-            st.info()
+            # st.info()
             st.write(response.metadata["selector_result"])
