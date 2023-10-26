@@ -108,6 +108,7 @@ if selected:
             query_engine_index = selector_dict["selections"][0]["index"]
             query_engine_used = query_engines[query_engine_index]
             reason = selector_dict["selections"][0]["reason"]
+            st.write(reason[0:4])
             if reason[0:4]=="snow":
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason
             else:
@@ -128,6 +129,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             query_engine_index = selector_dict["selections"][0]["index"]
             query_engine_used = query_engines[query_engine_index]
             reason = selector_dict["selections"][0]["reason"]
+            st.write(reason[0:4])
             if reason[0:4]=="snow":
                 explanation = "Used the **" + query_engine_used + "** to answer this question because " + reason
             else:
