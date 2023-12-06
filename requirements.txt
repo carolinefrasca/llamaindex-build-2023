@@ -1,7 +1,7 @@
 llama-hub
 streamlit
 wikipedia
-openai<=1.0.0
+openai
 llama-index==0.8.68
 nltk
 httpx
