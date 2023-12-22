@@ -1,8 +1,8 @@
 llama-hub
 streamlit
 wikipedia
-openai==0.28.1
-llama-index==0.8.66
+openai
+llama-index
 nltk
 httpx
 pypdf
