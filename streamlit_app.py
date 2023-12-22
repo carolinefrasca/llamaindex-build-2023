@@ -18,7 +18,7 @@ import streamlit as st
 from streamlit_pills import pills
 
 st.set_page_config(
-    page_title=f"Chat with {self.wikipedia_page}'s Wikipedia page, powered by LlamaIndex",
+    page_title=f"Chat with Snowflake's Wikipedia page, powered by LlamaIndex",
     page_icon="🦙",
     layout="centered",
     initial_sidebar_state="auto",
@@ -31,7 +31,7 @@ if "messages" not in st.session_state:  # Initialize the chat messages history
     ]
 
 st.title(
-    f"Chat with {self.wikipedia_page}'s Wikipedia page, powered by LlamaIndex 💬🦙"
+    f"Chat with Snowflake's Wikipedia page, powered by LlamaIndex 💬🦙"
 )
 st.info(
     "This example is powered by the **[Llama Hub Wikipedia Loader](https://llamahub.ai/l/wikipedia)**. Use any of [Llama Hub's many loaders](https://llamahub.ai/) to retrieve and chat with your data via a Streamlit app.",
