@@ -50,7 +50,7 @@ def load_index_data():
         "WikipediaReader", custom_path="local_dir"
     )
     loader = WikipediaReader()
-    docs = loader.load_data(pages=["Snowflake"])
+    docs = loader.load_data(pages=["Snowflake Inc."])
     service_context = ServiceContext.from_defaults(
         llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5)
     )
